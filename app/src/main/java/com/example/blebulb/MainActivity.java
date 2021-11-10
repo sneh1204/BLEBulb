@@ -164,6 +164,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void writeData(BluetoothGattCharacteristic characteristic, int value) {
+        if (mBluetoothGatt == null) return;
+
+        byte[] a = new byte[1];
+        a[0] = (byte) value;
+        characteristic.setValue(a);
+
+        mBluetoothGatt.writeCharacteristic(characteristic);
+    }
+
+    public void readData(BluetoothGattCharacteristic characteristic) {
+        String uuid = characteristic.getUuid().toString();
+        if (uuid.equalsIgnoreCase(BEEP)) {
+            mBluetoothGatt.readCharacteristic(characteristic);
+        }
+    }
+
     private void scanLeDevice() {
         if (!mScanning) {
 
@@ -184,12 +201,10 @@ public class MainActivity extends AppCompatActivity {
             ScanSettings scanSettings = new ScanSettings.Builder()
                     .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                     .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
-                    .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-                    .setReportDelay(0L)
                     .build();
 
             mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilterList, scanSettings, leScanCallback);
+
         } else {
             Toast.makeText(MainActivity.this, "Searching stopped...!", Toast.LENGTH_SHORT).show();
 
@@ -273,22 +288,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mBluetoothGatt = device.connectGatt(MainActivity.this, false, gattCallback);
-    }
-
-    public void writeData(BluetoothGattCharacteristic characteristic, final int value) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) return;
-
-        byte[] a = new byte[1];
-        a[0] = (byte) value;
-        characteristic.setValue(a);
-
-        mBluetoothGatt.writeCharacteristic(characteristic);
-    }
-
-    public void readData(BluetoothGattCharacteristic characteristic) {
-        if (characteristic.getUuid().toString().equalsIgnoreCase(BEEP)) {
-            mBluetoothGatt.readCharacteristic(characteristic);
-        }
     }
 
 }
