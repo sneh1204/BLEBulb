@@ -1,6 +1,4 @@
-# Bluetooth Low Energy (BLE) Bulb
-
-# Project Wiki
+# BLE Bulb
 
 ## App Requirements
 - You should build an application that connects to the Smart BLE bulb by searching for peripherals that provide the SERVICE UUID.
